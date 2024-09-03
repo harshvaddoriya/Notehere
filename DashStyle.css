@@ -1,0 +1,100 @@
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination-button {
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.pagination-button.disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.pagination-number {
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    background-color: #f2f2f2;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.pagination-number.active {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Media queries for responsiveness */
+@media only screen and (max-width: 768px) {
+    /* Adjustments for smaller screens */
+    .container {
+        flex-direction: column;
+    }
+
+    .hero {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .modal-content {
+        width: 100%;
+    }
+
+    form {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    form input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .pagination-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .pagination-button,
+    .pagination-number {
+        margin: 5px 0;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    /* Further adjustments for smaller screens */
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+
+    .modal-body {
+        padding: 10px;
+    }
+
+    form button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .pagination-button,
+    .pagination-number {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+}
+

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="Navbar.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+    <div id="content">
+        <h1>Welcome to Dashboard</h1>
+        <br />
+
+        <div class="container">
+            <h1><img src="notes.png">Notes</h1>
+            <button class="btn"><img src="plus1.png">Create Notes</button>
+
+            <div class="notes-container">
+                <p contenteditable="true" class="input-box">
+                    <img src="delete.png" class="delete">
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM fully loaded and parsed');
+
+            // Function to load navbar dynamically
+            function loadNavbar() {
+                fetch('navbar.html')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('navbar-container').innerHTML = data;
+                        addNavbarListeners();
+                    })
+                    .catch(error => console.error('Error loading navbar:', error));
+            }
+
+            // Add event listeners to navbar elements
+            function addNavbarListeners() {
+                const navBar = document.querySelector("nav"),
+                    menuBtns = document.querySelectorAll(".menu-icon"),
+                    overlay = document.querySelector(".overlay");
+
+                menuBtns.forEach((menuBtn) => {
+                    menuBtn.addEventListener("click", () => {
+                        navBar.classList.toggle("open");
+                    });
+                });
+
+                overlay.addEventListener("click", () => {
+                    navBar.classList.remove("open");
+                });
+
+                document.getElementById('logout').addEventListener('click', function () {
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = 'login.html';
+                });
+
+                function loadPage(page) {
+                    fetch(page)
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById('content').innerHTML = data;
+                        })
+                        .catch(error => console.error('Error loading page:', error));
+                }
+            }
+
+            // Load navbar when the page loads
+            loadNavbar();
+
+            const notesContainer = document.querySelector(".notes-container");
+            const createBtn = document.querySelector(".btn");
+            let notes = document.querySelectorAll(".input-box");
+
+            function showNotes() {
+                const storedNotes = localStorage.getItem("notes");
+                console.log('Stored Notes:', storedNotes);
+                notesContainer.innerHTML = storedNotes || '';
+            }
+            showNotes();
+
+            function updateStorage() {
+                const notesHTML = notesContainer.innerHTML;
+                console.log('Updating storage with notes:', notesHTML);
+                localStorage.setItem("notes", notesHTML);
+            }
+
+            if (createBtn) {
+                console.log('Create Notes button found:', createBtn);
+                createBtn.addEventListener("click", () => {
+                    console.log('Create Notes button clicked');
+                    let inputBox = document.createElement("p");
+                    let img = document.createElement("img");
+                    inputBox.className = "input-box";
+                    inputBox.setAttribute("contenteditable", "true");
+                    img.src = "images/delete.png";
+                    notesContainer.appendChild(inputBox).appendChild(img);
+                    updateStorage();
+                });
+            } else {
+                console.error('Create Notes button not found');
+            }
+
+            // delete functionality 
+            notesContainer.addEventListener("click", function (e) {
+                if (e.target.tagName === "IMG") {
+                    console.log('Delete image clicked:', e.target);
+                    e.target.parentElement.remove();
+                    updateStorage();
+                } else if (e.target.tagName === "P") {
+                    notes = document.querySelectorAll(".input-box");
+                    notes.forEach(nt => {
+                        nt.onkeyup = function () {
+                            updateStorage();
+                        }
+                    });
+                }
+            });
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "Enter") {
+                    console.log('Enter key pressed');
+                    document.execCommand("insertLineBreak");
+                    event.preventDefault();
+                }
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>

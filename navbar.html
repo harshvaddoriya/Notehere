@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar</title>
+    <link rel="stylesheet" href="Navbar.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            <i class='bx bx-menu menu-icon'></i>
+            <span class="logo-name">Notehere</span>
+        </div>
+        <div class="sidebar">
+            <div class="logo">
+                <i class='bx bx-menu menu-icon'></i>
+                <span class="logo-name">Notehere</span>
+            </div>
+            <div class="sidebar-content">
+                <ul class="lists">
+                    <li class="list">
+                        <a href="dashboard.html" class="nav-link" onclick="loadPage('dashboard.html')">
+                            <i class='bx bx-home-alt icon'></i>
+                            <span class="link">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="list">
+                        <a href="user-detail.html" class="nav-link" onclick="loadPage('user-detail.html')">
+                            <i class='bx bxs-user-detail icon'></i>
+                            <span class="link">User-Detail</span>
+                        </a>
+                    </li>
+                    <li class="list">
+                        <a href="feedback.html" class="nav-link" onclick="loadPage('feedback.html')">
+                            <i class='bx bxs-message-detail icon'></i>
+                            <span class="link">Feedback</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="bottom-content">
+                    <ul class="lists">
+
+                        <li class="list">
+                            <a href="#" class="nav-link" id="logout">
+                                <i class='bx bx-log-out icon'></i>
+                                <span class="link">Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="overlay"></section>
+    <script>
+        const navBar = document.querySelector("nav"),
+            menuBtns = document.querySelectorAll(".menu-icon"),
+            overlay = document.querySelector(".overlay");
+
+        menuBtns.forEach((menuBtn) => {
+            menuBtn.addEventListener("click", () => {
+                navBar.classList.toggle("open");
+            });
+        });
+
+        overlay.addEventListener("click", () => {
+            navBar.classList.remove("open");
+        });
+
+        document.getElementById('logout').addEventListener('click', function () {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'login.html';
+        });
+
+        function loadPage(page) {
+            fetch(page)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('content').innerHTML = data;
+                })
+                .catch(error => console.error('Error loading page:', error));
+        }
+
+
+    </script>
+</body>
+
+</html>

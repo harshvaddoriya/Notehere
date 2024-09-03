@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="Navbar.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="feedback.css">
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+    <div id="content">
+        <h1>Welcome to Dashboard</h1>
+
+        <div class="container">
+            <div class="hero">
+                <img src="feedback.png" alt="">
+            </div>
+            <div class="hero">
+                <h3>Feedback Time!</h3>
+                <h1>Our Brand New <br>Website Is On Its Way</h1>
+                <p>Stay tuned for updates and improvements!</p>
+                <form name="submit-to-google-sheet">
+                    <input type="text" name="Feedback" placeholder="Your Feedback" required>
+                    <button type="submit"><img src="send-icon.png" width="30px"></button>
+                </form>
+                <span id="msg"></span>
+            </div>
+        </div>
+
+        <!-- Other content here -->
+    </div>
+
+    <script>
+        // Function to load navbar dynamically
+        function loadNavbar() {
+            fetch('navbar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('navbar-container').innerHTML = data;
+                    addNavbarListeners(); // Add event listeners after loading navbar
+                })
+                .catch(error => console.error('Error loading navbar:', error));
+        }
+
+        // Add event listeners to navbar elements
+        function addNavbarListeners() {
+            const navBar = document.querySelector("nav"),
+                menuBtns = document.querySelectorAll(".menu-icon"),
+                overlay = document.querySelector(".overlay");
+
+            menuBtns.forEach((menuBtn) => {
+                menuBtn.addEventListener("click", () => {
+                    navBar.classList.toggle("open");
+                });
+            });
+
+            overlay.addEventListener("click", () => {
+                navBar.classList.remove("open");
+            });
+
+            document.getElementById('logout').addEventListener('click', function () {
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'login.html';
+            });
+
+            function loadPage(page) {
+                fetch(page)
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('content').innerHTML = data;
+                    })
+                    .catch(error => console.error('Error loading page:', error));
+            }
+        }
+
+        // Load navbar when the page loads
+        window.addEventListener('DOMContentLoaded', loadNavbar);
+
+        // Feedback form submission
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzegcuTsPvZn9T1v2a4UJE_p3c72yvIE-KET6Zyg90_-GdWZ73ERb-Gg-y6kaQe7Tit/exec';
+        const form = document.forms['submit-to-google-sheet'];
+        const msg = document.getElementById("msg");
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+                .then(response => {
+                    msg.innerHTML = "Thank You For Feedback!";
+                    setTimeout(function () {
+                        msg.innerHTML = "";
+                    }, 3000);
+                    form.reset();
+                })
+                .catch(error => console.error('Error!', error.message));
+        });
+    </script>
+</body>
+
+</html>
